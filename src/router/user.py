@@ -1,4 +1,3 @@
-from unittest import result
 from fastapi import APIRouter, Response, Header
 from fastapi.responses import JSONResponse 
 from starlette.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_401_UNAUTHORIZED
@@ -25,8 +24,7 @@ def get_users():
 def get_user(user_id: str):
   with engine.connect() as conn:
     result = conn.execute(users.select().where(users.c.id == user_id)).first()
-
-    return result
+  return result
 
 
 
@@ -59,13 +57,13 @@ def user_login(data_user: UserAuth):
       if check_passw:
         return {
           "status": 200,
-          "message": "Access success"
+          "message": "Access success",
+          "user" : result
         }
+      else:
+        return Response(status_code=HTTP_401_UNAUTHORIZED)
 
-    return  {
-      "status": HTTP_401_UNAUTHORIZED,
-      "message": "Access denied"
-    }
+    return JSONResponse(content={"message": "User not found"}, status_code=404)
 
 @user.post("user/login/token")
 def user_login_token(user : UserAuth):
@@ -76,7 +74,12 @@ def user_login_token(user : UserAuth):
             check_passw = check_password_hash(result[12], user.password)
             if check_passw:
                 print(user.dict())
-                return write_token(user.dict())
+                return {
+                  "status": 200,
+                  "message": "Access success",
+                  "token" : write_token(user.dict()),
+                  "user" : result
+                }
             else:
                 return Response(status_code=HTTP_401_UNAUTHORIZED)
         else:

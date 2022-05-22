@@ -1,12 +1,14 @@
 from unittest import result
-from fastapi import APIRouter, Response
+from fastapi import APIRouter, Response, Header
+from fastapi.responses import JSONResponse 
 from starlette.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_401_UNAUTHORIZED
-from schema.user import User, UserLogin
-from db.db import engine
-from model.user import users
+from src.schema.user import User
+from src.schema.userAuth import UserAuth
+from src.db.db import engine
+from src.model.user import users
 from werkzeug.security import generate_password_hash, check_password_hash
 from typing import List
-
+from src.functions_jwt import write_token, validate_token
 
 user = APIRouter()
 
@@ -44,13 +46,15 @@ def create_user(data_user: User):
     return Response(status_code=HTTP_201_CREATED)
 
 
+
+
 @user.post("/user/login", status_code=200)
-def user_login(data_user: UserLogin):
+def user_login(data_user: UserAuth):
   with engine.connect() as conn:
     result = conn.execute(users.select().where(users.c.email == data_user.email)).first()
-
+    print(result)
     if result != None:
-      check_passw = check_password_hash(result[3], data_user.password)
+      check_passw = check_password_hash(result[12], data_user.password)
 
       if check_passw:
         return {
@@ -63,6 +67,25 @@ def user_login(data_user: UserLogin):
       "message": "Access denied"
     }
 
+@user.post("user/login/token")
+def user_login_token(user : UserAuth):
+    with engine.connect() as conn:
+        result = conn.execute(users.select().where(users.c.email == user.email)).first()
+
+        if result != None:
+            check_passw = check_password_hash(result[12], user.password)
+            if check_passw:
+                print(user.dict())
+                return write_token(user.dict())
+            else:
+                return Response(status_code=HTTP_401_UNAUTHORIZED)
+        else:
+            return JSONResponse(content={"message": "User not found"}, status_code=404)
+
+@user.post("/verify/token")
+def verify_token(Authorization:  str = Header(None)):
+    token = Authorization.split(' ')[1]
+    return validate_token(token, output=True)
 
 @user.put("/user/{user_id}}", response_model=User)
 def update_user(data_update: User, user_id: str):

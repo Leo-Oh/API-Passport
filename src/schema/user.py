@@ -1,6 +1,4 @@
-from unicodedata import name
-from unittest.mock import Base
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional
 
 
@@ -16,9 +14,5 @@ class User(BaseModel):
     second_surname: str
     telephone: str
     optional_telephone: Optional[str]
-    email: str
+    email: EmailStr
     password: str
-
-class UserLogin(BaseModel):
-  email: str
-  password: str

@@ -1,7 +1,7 @@
 import string
 from sqlalchemy import Table, Column
 from sqlalchemy.sql.sqltypes import Integer, String
-from db.db import engine, meta_data
+from src.db.db import engine, meta_data
 
 
 users = Table('users', meta_data,

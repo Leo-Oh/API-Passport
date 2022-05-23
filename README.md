@@ -20,4 +20,6 @@ Ejecutar mysql para entrar a la terminal y crear base de datos o querys
     sudo docker exec -it mysql-5.7.38-oracle  mysql -p
 
 
+# Running
 
+![image](https://user-images.githubusercontent.com/59150442/169755200-b78f6d7e-ebd2-43c0-b98f-23ab7501733b.png)

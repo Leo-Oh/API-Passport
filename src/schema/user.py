@@ -3,7 +3,7 @@ from typing import Optional
 
 
 class User(BaseModel):
-    id: Optional[str]
+    id: Optional[int]
     country: str
     state: str
     default_office: str

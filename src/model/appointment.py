@@ -1,10 +1,9 @@
-import string
 from sqlalchemy import Table, Column
 from sqlalchemy.sql.sqltypes import Integer, String
 from src.db.db import engine, meta_data
 
 
-citass = Table('appointment', meta_data,
+appointments = Table('appointments', meta_data,
     Column('id', Integer, primary_key=True),
     Column('id_user', Integer, foreign_keys=True),
     Column('state',String(250), nullable=False),

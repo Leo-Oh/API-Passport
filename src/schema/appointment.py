@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 
 
-class User(BaseModel):
+class Appointment(BaseModel):
     id: Optional[int]
     id_user: int
     state: str

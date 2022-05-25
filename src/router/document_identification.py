@@ -10,10 +10,8 @@ document_identification = APIRouter()
 @document_identification.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
     #with open(getcwd() + "/src/uploads/identification" + file.filename, "wb") as myfile:
-   
     id_image = uuid.uuid4()
     with open(getcwd() + "/src/uploads/identification/" + str(id_image)+".jpg", "wb") as myfile:
-    #with open("src/uploads/identification/" + str(id_image)+".jpg", "wb") as myfile:
         content = await file.read()
         myfile.write(content)
         myfile.close()
@@ -24,21 +22,17 @@ async def upload_file(file: UploadFile = File(...)):
 
 @document_identification.get("/file/{name_file}")
 def get_file(name_file: str):
-    #return FileResponse(getcwd() + "/src/uploads/identification/" + name_file)
-    return FileResponse("src/uploads/identification/" + name_file)
+    return FileResponse(getcwd() + "/src/uploads/identification/" + name_file)
 
 
 @document_identification.get("/download/{name_file}")
 def download_file(name_file: str):
-    #return FileResponse(getcwd() + "/src/uploads/identification/" + name_file, media_type="application/octet-stream", filename=name_file)
-    return FileResponse("src/uploads/identification/" + name_file, media_type="application/octet-stream", filename=name_file)
-
+    return FileResponse(getcwd() + "/src/uploads/identification/" + name_file, media_type="application/octet-stream", filename=name_file)
 
 @document_identification.delete("/delete/{name_file}")
 def delete_file(name_file: str):
     try:
-        #remove(getcwd() + "/src/uploads/identification/" + name_file)
-        remove("src/uploads/identification/" + name_file)
+        remove(getcwd() + "/src/uploads/identification/" + name_file)
         return JSONResponse(content={
             "removed": True
         }, status_code=200)

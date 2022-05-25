@@ -12,8 +12,8 @@ async def upload_file(file: UploadFile = File(...)):
     #with open(getcwd() + "/src/uploads/identification" + file.filename, "wb") as myfile:
    
     id_image = uuid.uuid4()
-    #with open(getcwd() + "/src/uploads/identification/" + str(id_image)+".jpg", "wb") as myfile:
-    with open("src/uploads/identification/" + str(id_image)+".jpg", "wb") as myfile:
+    with open(getcwd() + "/src/uploads/identification/" + str(id_image)+".jpg", "wb") as myfile:
+    #with open("src/uploads/identification/" + str(id_image)+".jpg", "wb") as myfile:
         content = await file.read()
         myfile.write(content)
         myfile.close()

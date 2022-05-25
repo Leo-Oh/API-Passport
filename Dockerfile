@@ -6,11 +6,9 @@ RUN apt-get install python3 -y
 
 RUN apt-get install python3-pip -y
 
-COPY . /opt/api-passport-mysql
+COPY . /app
 
-WORKDIR /opt/api-passport-mysql/
-
-RUN pip3 install -r requirements.txt
+WORKDIR /app
 
 EXPOSE 9090
 

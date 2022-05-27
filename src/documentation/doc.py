@@ -22,4 +22,8 @@ tags_metadatas = [
         "name": "Documents Nationality",
         "description": "All action to files about nationality are here"
     },
+     {
+        "name": "Admin",
+        "description": "Only admin users can access here"
+    },
 ]

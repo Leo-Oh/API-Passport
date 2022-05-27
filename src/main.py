@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from dotenv import load_dotenv
 from fastapi.middleware.cors import CORSMiddleware
 from src.router.user import user
+from src.router.admin import admin
 from src.router.document_identification import document_identification
 from src.router.document_nationality import document_nationality
 from src.router.appointment import appointment
@@ -27,6 +28,7 @@ app.add_middleware(
 
 
 app.include_router(user, prefix='/api',tags=["User"])
+app.include_router(admin, prefix='/api/mode',tags=["Admin"])
 app.include_router(document_identification, prefix='/api/documents/identification',tags=["Documents Identification"])
 app.include_router(document_nationality, prefix='/api/documents/nationality',tags=["Documents Nationality"])
 app.include_router(appointment, prefix='/api',tags=["Appointment"])

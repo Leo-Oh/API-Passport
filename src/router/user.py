@@ -46,50 +46,48 @@ def create_user(data_user: User):
 
 
 
-@user.post("/user/login", status_code=200)
-def user_login(data_user: UserAuth):
-  with engine.connect() as conn:
-    result = conn.execute(users.select().where(users.c.email == data_user.email)).first()
-    print(result)
-    if result != None:
-      check_passw = check_password_hash(result[12], data_user.password)
+#@user.post("/user/login", status_code=200)
+#def user_login(data_user: UserAuth):
+#  with engine.connect() as conn:
+#    result = conn.execute(users.select().where(users.c.email == data_user.email)).first()
+#    if result != None:
+#      check_passw = check_password_hash(result[12], data_user.password)
+#      if check_passw:
+#        return {
+#          "status": 200,
+#          "message": "Access success",
+#          "user" : result
+#        }
+#      else:
+#        return Response(status_code=HTTP_401_UNAUTHORIZED)
+#
+#    return JSONResponse(content={"message": "User not found"}, status_code=404)
 
-      if check_passw:
-        return {
-          "status": 200,
-          "message": "Access success",
-          "user" : result
-        }
-      else:
-        return Response(status_code=HTTP_401_UNAUTHORIZED)
-
-    return JSONResponse(content={"message": "User not found"}, status_code=404)
-
-@user.post("user/login/token")
+@user.post("/user/login/token")
 def user_login_token(user : UserAuth):
-    with engine.connect() as conn:
-        result = conn.execute(users.select().where(users.c.email == user.email)).first()
+  with engine.connect() as conn:
+    result = conn.execute(users.select().where(users.c.email == user.email)).first()
 
-        if result != None:
-            check_passw = check_password_hash(result[12], user.password)
-            if check_passw:
-                print(user.dict())
-                return {
-                  "status": 200,
-                  "message": "Access success",
-                  "token" : write_token(user.dict()),
-                  "user" : result
-                }
-            else:
-                return Response(status_code=HTTP_401_UNAUTHORIZED)
+    if result != None:
+        check_passw = check_password_hash(result[12], user.password)
+        if check_passw:
+            return {
+              "status": 200,
+              "message": "Access success",
+              "token" : write_token(user.dict()),
+              "user" : result
+            }
         else:
-            return JSONResponse(content={"message": "User not found"}, status_code=404)
+            return Response(status_code=HTTP_401_UNAUTHORIZED)
+    else:
+        return JSONResponse(content={"message": "User not found"}, status_code=404)
 
-@user.post("/verify/token")
-def verify_token(Authorization:  str = Header(None)):
-    token = Authorization.split(' ')[1]
-    return validate_token(token, output=True)
-
+@user.post("/user/verify/token")
+def verify_token(user_token:str=Header(default=None)):
+  #token = user_token.split(' ')[1]
+  token=user_token.split(" ")[0]
+  return validate_token(token, output=True)
+  
 @user.put("/user/{user_id}", response_model=User)
 def update_user(data_update: User, user_id: str):
   with engine.connect() as conn:

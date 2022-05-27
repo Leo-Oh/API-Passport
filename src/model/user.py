@@ -1,4 +1,3 @@
-import string
 from sqlalchemy import Table, Column
 from sqlalchemy.sql.sqltypes import Integer, String
 from src.db.db import engine, meta_data

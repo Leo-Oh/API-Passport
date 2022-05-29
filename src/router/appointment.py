@@ -19,6 +19,13 @@ def get_all_appointments():
     result = conn.execute(appointments.select()).fetchall() 
     return result
 
+
+@appointment.get("/appointments/{name}", response_model=List[Appointment])
+def get_all_appointments(name: str):
+  with engine.connect() as conn:
+    result = conn.execute(appointments.select().where(appointments.c.name == name)).fetchall() 
+    return result
+
 """
 ==================================================
             Returns a list of Appointments 

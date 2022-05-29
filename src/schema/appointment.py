@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import date, datetime, time, timedelta
 from typing import Optional
 
 
@@ -13,3 +14,5 @@ class Appointment(BaseModel):
     identification_document_url: str
     nationality_document: str
     nationality_document_url: str
+    date: date
+    time: time

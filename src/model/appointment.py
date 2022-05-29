@@ -1,5 +1,5 @@
 from sqlalchemy import Table, Column
-from sqlalchemy.sql.sqltypes import Integer, String
+from sqlalchemy.sql.sqltypes import Integer, String, Date, Time
 from src.db.db import engine, meta_data
 
 
@@ -14,6 +14,8 @@ appointments = Table('appointments', meta_data,
     Column('identification_document_url',String(1000), nullable=False),
     Column('nationality_document',String(200), nullable=False),
     Column('nationality_document_url',String(1000), nullable=False),
+    Column('date', Date, nullable=False),
+    Column('hour', Time, nullable=False),
        
 )
 

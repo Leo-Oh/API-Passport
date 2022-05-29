@@ -2,7 +2,6 @@ from pydantic import BaseModel
 from datetime import date, datetime, time, timedelta
 from typing import Optional
 
-
 class Appointment(BaseModel):
     id: Optional[int]
     id_user: int

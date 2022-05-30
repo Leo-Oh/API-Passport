@@ -92,7 +92,7 @@ def verify_token(user_token:str=Header(default=None)):
   return validate_token(token, output=True)
 
 @admin.put("/admin/{admin_id}", response_model=Admin)
-def update_admin(data_update: Admin, admin_id: str):
+def update_admin(data_update: Admin, admin_id: int):
   with engine.connect() as conn:
     encryp_passw = generate_password_hash(data_update.password, "pbkdf2:sha256:30", 30)
 
@@ -103,6 +103,7 @@ def update_admin(data_update: Admin, admin_id: str):
         second_surname = data_update.second_surname,
         telephone = data_update.telephone,
         role = data_update.role,
+        registration_tag = data_update.registration_tag,
         email = data_update.email,
         password = encryp_passw
 
@@ -114,7 +115,7 @@ def update_admin(data_update: Admin, admin_id: str):
 
 
 @admin.delete("/admin/{admin_id}", status_code=HTTP_204_NO_CONTENT)
-def delete_admin(admin_id: str):
+def delete_admin(admin_id: int):
   with engine.connect() as conn:
     conn.execute(admins.delete().where(admins.c.id == admin_id))
     return Response(status_code=HTTP_204_NO_CONTENT)

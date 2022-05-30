@@ -15,3 +15,4 @@ class Appointment(BaseModel):
     nationality_document_url: str
     date: date
     time: time
+    status: bool

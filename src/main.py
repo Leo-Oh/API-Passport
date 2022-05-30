@@ -12,7 +12,7 @@ import uvicorn
 app = FastAPI(
     title="REST API to passport system",
     description="By ISW UV",
-    version="0.2",
+    version="0.5",
     openapi_tags=tags_metadatas
 )
 

@@ -10,15 +10,20 @@ document_nationality = APIRouter()
 @document_nationality.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
     #with open(getcwd() + "/src/uploads/nationality/" + file.filename, "wb") as myfile:
-    id_image = uuid.uuid4()
-    with open(getcwd() + "/src/uploads/nationality/" + str(id_image)+".jpg", "wb") as myfile:
-        content = await file.read()
-        myfile.write(content)
-        myfile.close()
-    return JSONResponse(content={
-            "message": "File saved",
-            "url": myfile.name
-        }, status_code=200)
+    if(file.filename[-4:] == ".jpg" or file.filename[-4:] == ".png" or file.filename[-6:] == ".jpeg"):
+        id_image = uuid.uuid4()
+        with open(getcwd() + "/src/uploads/nationality/" + str(id_image)+".jpg", "wb") as myfile:
+            content = await file.read()
+            myfile.write(content)
+            myfile.close()
+        return JSONResponse(content={
+                "message": "File saved",
+                "url": myfile.name
+            }, status_code=200)
+    else:
+        return JSONResponse(content={
+            "message": "File not saved, verify",
+            }, status_code=400)
 
 @document_nationality.get("/file/{name_file}")
 def get_file(name_file: str):

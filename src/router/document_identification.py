@@ -82,7 +82,7 @@ async def upload_file(file: UploadFile = File(...)):
         return JSONResponse(content={
             "message": "File saved",
             "url": myfile.name,
-            "image_information": json_informacion
+            "image_information": information
             }, status_code=200)
     else:
         return JSONResponse(content={

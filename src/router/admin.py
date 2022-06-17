@@ -98,18 +98,16 @@ def update_admin(data_update: Admin, admin_id: int):
     encryp_passw = generate_password_hash(data_update.password, "pbkdf2:sha256:30", 30)
 
     conn.execute(admins.update().values(
-
-id = data_update.id,
-name = data_update.name,
-first_surname = data_update.first_surname,
-second_surname = data_update.second_surname,
-telephone = data_update.telephone,
-role = data_update.role,
-registration_tag = data_update.registration_tag,
-email = data_update.email,
-password = encryp_passw
-
-        ).where(admins.c.id == admin_id))
+      id = data_update.id,
+      name = data_update.name,
+      first_surname = data_update.first_surname,
+      second_surname = data_update.second_surname,
+      telephone = data_update.telephone,
+      role = data_update.role,
+      registration_tag = data_update.registration_tag,
+      email = data_update.email,
+      password = encryp_passw
+    ).where(admins.c.id == admin_id))
 
     result = conn.execute(admins.select().where(admins.c.id == admin_id)).first()
 
@@ -120,4 +118,4 @@ password = encryp_passw
 def delete_admin(admin_id: int):
   with engine.connect() as conn:
     conn.execute(admins.delete().where(admins.c.id == admin_id))
-    return Response(status_code=HTTP_204_NO_CONTENT)
+    return JSONResponse(content={"message": "admin has been deleted successfully"}, status_code=204)

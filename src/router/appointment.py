@@ -81,9 +81,6 @@ def get_appointment_by_user_id_and_by_appointment_id(id_user: int, id_appointmen
     result = conn.execute(appointments.select().where(appointments.c.id == id_appointment, appointments.c.id_user == id_user )).first()
   return result
 
-
-
-
 @appointment.post("/appointment", status_code=HTTP_201_CREATED)
 def create_appointment(data_appointment: Appointment):
   with engine.connect() as conn:
@@ -91,16 +88,24 @@ def create_appointment(data_appointment: Appointment):
     conn.execute(appointments.insert().values(new_appointment))
     return Response(status_code=HTTP_201_CREATED)
 
-
 @appointment.put("/appointment/{appontment_id}", response_model=Appointment)
 def update_appointment(data_update: Appointment, appointment_id: int):
   with engine.connect() as conn:
     conn.execute(appointments.update().values(
       id = data_update.id,
       id_user = data_update.id_user,
+      curp = data_update.curp,
+      name = data_update.name,
+      first_surname = data_update.first_surname,
+      second_surname = data_update.second_surname,
+      born_country = data_update.born_country,
+      born_date = data_update.born_date,
+      nationality = data_update.nationality,
+      address = data_update.address,
+      telephone = data_update.telephone,
+      optional_telephone = data_update.optional_telephone,
       state = data_update.state,
       office = data_update.office,
-      curp = data_update.curp,
       office_paperwork = data_update.office_paperwork,
       identification_document = data_update.identification_document,
       identification_document_url = data_update.identification_document_url,
@@ -110,9 +115,7 @@ def update_appointment(data_update: Appointment, appointment_id: int):
       time = data_update.time,
       status = data_update.status,
     ).where(appointments.c.id == appointment_id))
-
     result = conn.execute(appointments.select().where(appointments.c.id == appointment_id)).first()
-
     return result
 
 @appointment.delete("/appointment/{id_appointment}", status_code=HTTP_204_NO_CONTENT)

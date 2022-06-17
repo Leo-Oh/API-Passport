@@ -1,10 +1,12 @@
 FROM ubuntu
 
-RUN apt-get update -y && apt-get upgrade -y
+RUN apt-get update -y 
+
+RUN apt-get upgrade -y
 
 RUN apt-get install python3 -y
 
-RUN apt install tesseract-ocr -y
+RUN apt-get install tesseract-ocr -y
 
 RUN apt-get install python3-pip -y
 

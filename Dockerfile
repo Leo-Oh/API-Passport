@@ -4,6 +4,8 @@ RUN apt-get update -y && apt-get upgrade -y
 
 RUN apt-get install python3 -y
 
+RUN apt install tesseract-ocr
+
 RUN apt-get install python3-pip -y
 
 COPY . /app

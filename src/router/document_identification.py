@@ -4,8 +4,36 @@ from os import getcwd, remove
 from shutil import rmtree
 import uuid
 
+import pytesseract
+import json
+
+
 
 document_identification = APIRouter()
+
+
+def token(string):
+    start, i = 0, 0
+    token_list = []
+    for x in range(0, len(string)):
+        if " " == string[i:i+1]:
+            token_list.append(string[start:i])
+            start = i + 1
+        i += 1
+    token_list.append(string[start:i])
+    return token_list
+
+def find_between( s, first, last ):
+    try:
+        start = s.index( first ) + len( first )
+        end = s.index( last, start )
+        return s[start:end]
+    except ValueError:
+        return ""
+
+def num_there(s):
+    return any(i.isdigit() for i in s)
+
 
 @document_identification.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
@@ -18,9 +46,43 @@ async def upload_file(file: UploadFile = File(...)):
             content = await file.read()
             myfile.write(content)
             myfile.close()
+       
+            TextIOWrapper = pytesseract.image_to_string(myfile.name)
+
+            data = token(TextIOWrapper)
+            calle = find_between( TextIOWrapper, "C ", "COL" )
+            colonia = find_between( TextIOWrapper, "COL ", "ORIZABA")
+            colonia = find_between( TextIOWrapper, "COL ", "CORDOBA")
+            fecha = ""
+            curp = ""
+
+            for i in data:  
+              if len(i) == 18 and i[-1].isdigit():      
+                  curp = i
+              if "/" in i and num_there(i) == True:
+                fecha = i
+
+            fecha = fecha[0:10:1]
+            primer_apellido = find_between( TextIOWrapper, "NACIMIENTO", fecha)
+            segundo_apellido = find_between( TextIOWrapper, fecha, "sex")
+            nombres = find_between( TextIOWrapper, "H", "DOMICILIO")
+            nombres = find_between( TextIOWrapper, "M", "DOMICILIO")
+            nombres = find_between( TextIOWrapper, "sex", "DOMICILIO")
+
+            information = {
+              "name": nombres.strip('\n'),
+              "first_surname": primer_apellido.strip('\n'),
+              "second_surname": segundo_apellido.strip('\n'),
+              "street": calle.strip('\n'),
+              "suburb": colonia.strip('\n'),
+              "curp": curp.strip('\n'),
+              "date_birth": fecha.strip('\n') 
+            }
+            json_informacion = json.dumps(information)
         return JSONResponse(content={
             "message": "File saved",
-            "url": myfile.name
+            "url": myfile.name,
+            "image_information": json_informacion
             }, status_code=200)
     else:
         return JSONResponse(content={

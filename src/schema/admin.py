@@ -12,3 +12,7 @@ class Admin(BaseModel):
     registration_tag: str
     email: EmailStr
     password: str
+
+
+class Find_anyone_admin(BaseModel):
+    to_find: str

@@ -39,7 +39,7 @@ def num_there(s):
 async def upload_file(file: UploadFile = File(...)):
     #with open(getcwd() + "/src/uploads/identification" + file.filename, "wb") as myfile:
 
-    if(file.filename[-4:] == ".jpg" or file.filename[-4:] == ".png" or file.filename[-6:] == ".jpeg"):
+    if(file.filename[-4:] == ".jpg" or file.filename[-4:] == ".png" or file.filename[-5:] == ".jpeg"):
         id_image = uuid.uuid4()
         
         with open(getcwd() + "/src/uploads/identification/" + str(id_image)+".jpg", "wb") as myfile:
@@ -93,7 +93,47 @@ async def upload_file(file: UploadFile = File(...)):
 
 @document_identification.get("/file/{name_file}")
 def get_file(name_file: str):
-    return FileResponse(getcwd() + "/src/uploads/identification/" + name_file)
+
+    ruta_imagen = getcwd() + "/src/uploads/identification/" + name_file
+
+    TextIOWrapper = pytesseract.image_to_string(ruta_imagen)
+    data = token(TextIOWrapper)
+    calle = find_between( TextIOWrapper, "C ", "COL" )
+    colonia = find_between( TextIOWrapper, "COL ", "ORIZABA")
+    colonia = find_between( TextIOWrapper, "COL ", "CORDOBA")
+    fecha = ""
+    curp = ""
+
+    for i in data:  
+      if len(i) == 18 and i[-1].isdigit():      
+          curp = i
+      if "/" in i and num_there(i) == True:
+        fecha = i
+
+    fecha = fecha[0:10:1]
+    primer_apellido = find_between( TextIOWrapper, "NACIMIENTO", fecha)
+    segundo_apellido = find_between( TextIOWrapper, fecha, "sex")
+    nombres = find_between( TextIOWrapper, "H", "DOMICILIO")
+    nombres = find_between( TextIOWrapper, "M", "DOMICILIO")
+    nombres = find_between( TextIOWrapper, "sex", "DOMICILIO")
+
+    information = {
+      "name": nombres.strip('\n'),
+      "first_surname": primer_apellido.strip('\n'),
+      "second_surname": segundo_apellido.strip('\n'),
+      "street": calle.strip('\n'),
+      "suburb": colonia.strip('\n'),
+      "curp": curp.strip('\n'),
+      "date_birth": fecha.strip('\n') 
+    }
+    json_informacion = json.dumps(information)
+    return JSONResponse(content={
+        "message": "File found",
+        "url": ruta_imagen,
+        "image_information": information
+        }, status_code=200)
+   
+    #return FileResponse(getcwd() + "/src/uploads/identification/" + name_file)
 
 
 @document_identification.get("/download/{name_file}")

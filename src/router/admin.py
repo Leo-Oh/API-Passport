@@ -118,4 +118,4 @@ def update_admin(data_update: Admin, admin_id: int):
 def delete_admin(admin_id: int):
   with engine.connect() as conn:
     conn.execute(admins.delete().where(admins.c.id == admin_id))
-    return JSONResponse(content={"message": "admin has been deleted successfully"}, status_code=204)
+    return Response(status_code=HTTP_204_NO_CONTENT)

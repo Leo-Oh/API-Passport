@@ -11,7 +11,6 @@ admins = Table('admins', meta_data,
     Column('telephone', String(15), nullable=False),
     Column('role', String(60), nullable=False),
     Column('registration_tag', String(60), nullable=False),
-    Column('curp', String(18), nullable=False),
     Column('email', String(80), nullable=False),
     Column('password',String(300), nullable=False)
 )

@@ -97,15 +97,16 @@ def update_admin(data_update: Admin, admin_id: int):
     encryp_passw = generate_password_hash(data_update.password, "pbkdf2:sha256:30", 30)
 
     conn.execute(admins.update().values(
-        id = data_update.id,
-        name = data_update.name,
-        first_surname = data_update.first_surname,
-        second_surname = data_update.second_surname,
-        telephone = data_update.telephone,
-        role = data_update.role,
-        registration_tag = data_update.registration_tag,
-        email = data_update.email,
-        password = encryp_passw
+
+id = data_update.id,
+name = data_update.name,
+first_surname = data_update.first_surname,
+second_surname = data_update.second_surname,
+telephone = data_update.telephone,
+role = data_update.role,
+registration_tag = data_update.registration_tag,
+email = data_update.email,
+password = encryp_passw
 
         ).where(admins.c.id == admin_id))
 

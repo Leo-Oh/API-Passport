@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Response, Header
 from fastapi.responses import JSONResponse 
 from starlette.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT, HTTP_401_UNAUTHORIZED
-from src.schema.admin import Admin
+from src.schema.admin import Admin, Find_anyone_admin
 from src.schema.adminAuth import AdminAuth
 from src.db.db import engine
 from src.model.admin import admins
 from werkzeug.security import generate_password_hash, check_password_hash
 from typing import List
 from src.functions_jwt import write_token, validate_token
-from sqlalchemy import or_
+from sqlalchemy.orm import Session
 
 admin = APIRouter()
 
@@ -25,7 +25,7 @@ def get_admin(admin_id: int):
   with engine.connect() as conn:
     result = conn.execute(admins.select().where(admins.c.id == admin_id)).first()
   return result
-  
+
 
 @admin.post("/admin", status_code=HTTP_201_CREATED)
 def create_admin(data_admin: Admin):

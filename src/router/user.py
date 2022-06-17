@@ -67,9 +67,8 @@ def create_user(data_user: User):
 def user_login_token(user : UserAuth):
   with engine.connect() as conn:
     result = conn.execute(users.select().where(users.c.email == user.email)).first()
-
     if result != None:
-        check_passw = check_password_hash(result[12], user.password)
+        check_passw = check_password_hash(result[3], user.password)
         if check_passw:
             return {
               "status": 200,

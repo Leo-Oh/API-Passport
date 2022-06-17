@@ -95,16 +95,7 @@ def update_user(data_update: User, user_id: str):
 
     conn.execute(users.update().values(
         id = data_update.id,
-        country = data_update.country,
-        state = data_update.state,
-        default_office = data_update.default_office,
-        born_country = data_update.born_country,
-        nationality = data_update.nationality,
-        name = data_update.name,
-        first_surname = data_update.first_surname,
-        second_surname = data_update.second_surname,
-        telephone = data_update.telephone,
-        optional_telephone = data_update.optional_telephone,
+        curp = data_update.curp,
         email = data_update.email,
         password = encryp_passw
 
